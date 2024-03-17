@@ -74,24 +74,24 @@ namespace Calculate
 
             }
         }
-        public void Pow( TextBox name, String letter)
-        {
-            for (double i = 0; i < 100; i += 0.01)
-            {
-                if (form.Contains(letter + "^" + i ))
-                {
-                    string pow = Math.Pow(Convert.ToDouble(name.Text.Trim()), i).ToString();
-                    form=form.Replace(letter+"^"+i, pow);
-                }
-                if (form.Contains( i + "^" + letter ))
-                {
-                    string pow = Math.Pow(i, Convert.ToDouble(name.Text.Trim())).ToString();
-                    form = form.Replace( i + "^" + letter , pow);
-                }
-                
-            }
+       public void Pow( TextBox name, String letter)
+ {
+     for (double i = 0; i < 100; i += 0.01)
+     {
+         if (form.Contains( "("+letter + "^" + i+")" ))
+         {
+             string pow = Math.Pow(Convert.ToDouble(name.Text.Trim()), i).ToString();
+             form=form.Replace("(" + letter + "^" + i + ")", pow);
+         }
+         if (form.Contains("(" + i + "^" + letter + ")"))
+         {
+             string pow = Math.Pow(i, Convert.ToDouble(name.Text.Trim())).ToString();
+             form = form.Replace("(" + i + "^" + letter + ")", pow);
+         }
          
-        }
+     }
+  
+ }
 
         private void New_Calc(object sender, RoutedEventArgs e)
         {
