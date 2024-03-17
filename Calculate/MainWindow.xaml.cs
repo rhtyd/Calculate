@@ -58,17 +58,17 @@ namespace Calculate
         {
             for (double i = 0; i < 100; i+=0.01)
             {
-                if (form.Contains("(Log" + i + "(" + letter + "))"))
+                if (form.Contains("Log" + i + "(" + letter + ")"))
                 {
                     string log = Math.Log(Convert.ToDouble(name.Text.Trim()), i).ToString();
-                    form = form.Replace("(Log" + i + "(" + letter + "))", log);
+                    form = form.Replace("Log" + i + "(" + letter + ")", log);
                 }
 
 
-                if (form.Contains("(Log" + letter + "(" + i + "))"))
+                if (form.Contains("Log" + letter + "(" + i + ")"))
                 {
                     string log = Math.Log( i, Convert.ToDouble(name.Text.Trim())).ToString();
-                    form = form.Replace("(Log" + letter + "(" + i + "))", log);
+                    form = form.Replace("Log" + letter + "(" + i + ")", log);
                 }
 
 
@@ -78,15 +78,15 @@ namespace Calculate
         {
             for (double i = 0; i < 100; i += 0.01)
             {
-                if (form.Contains("(" + letter + "^" + i + ")"))
+                if (form.Contains(letter + "^" + i ))
                 {
                     string pow = Math.Pow(Convert.ToDouble(name.Text.Trim()), i).ToString();
-                    form=form.Replace("("+letter+"^"+i+")", pow);
+                    form=form.Replace(letter+"^"+i, pow);
                 }
-                if (form.Contains("(" + i + "^" + letter + ")"))
+                if (form.Contains( i + "^" + letter ))
                 {
                     string pow = Math.Pow(i, Convert.ToDouble(name.Text.Trim())).ToString();
-                    form = form.Replace("(" + i + "^" + letter + ")", pow);
+                    form = form.Replace( i + "^" + letter , pow);
                 }
                 
             }
