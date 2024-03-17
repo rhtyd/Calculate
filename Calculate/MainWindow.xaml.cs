@@ -197,9 +197,7 @@ namespace Calculate
                 {
                    
 
-                    /*ChangeTrig(Text_A, "A");
-                    Pow(Text_A, "A");
-                    Log(Text_A, "A");*/
+                    
                     Change(Text_A, "A");
                     form = form.Replace("A", Text_A.Text.Trim().ToString());
 
