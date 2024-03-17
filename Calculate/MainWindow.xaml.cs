@@ -42,56 +42,54 @@ namespace Calculate
 
 
         }
-        public void ChangeTrig(TextBox name, String letter)
-        {
-            string sin = Math.Sin(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-            form = form.Replace("sin(" + letter + ")", sin);
+         public void Change(TextBox name, String letter) {
 
-            string cos = Math.Cos(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-            form = form.Replace("cos(" + letter + ")", cos);
+     
+     
+     string sin = Math.Sin(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+     form = form.Replace("sin(" + letter + ")", sin);
 
-            string tg = Math.Tan(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-            form = form.Replace("tg(" + letter + ")", tg);
+     string cos = Math.Cos(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+     form = form.Replace("cos(" + letter + ")", cos);
 
-        }
-        public void Log(TextBox name, String letter)
-        {
-            for (double i = 0; i < 100; i+=0.01)
-            {
-                if (form.Contains("Log" + i + "(" + letter + ")"))
-                {
-                    string log = Math.Log(Convert.ToDouble(name.Text.Trim()), i).ToString();
-                    form = form.Replace("Log" + i + "(" + letter + ")", log);
-                }
+     string tg = Math.Tan(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+     form = form.Replace("tg(" + letter + ")", tg);
 
 
-                if (form.Contains("Log" + letter + "(" + i + ")"))
-                {
-                    string log = Math.Log( i, Convert.ToDouble(name.Text.Trim())).ToString();
-                    form = form.Replace("Log" + letter + "(" + i + ")", log);
-                }
-
-
-            }
-        }
-       public void Pow( TextBox name, String letter)
- {
-     for (double i = 0; i < 100; i += 0.01)
+     for (int i = 0; i < 100; i++)
      {
-         if (form.Contains( "("+letter + "^" + i+")" ))
+         if (form.Contains("Log" + i + "(" + letter + ")"))
+         {
+             string log = Math.Log(Convert.ToDouble(name.Text.Trim()), i).ToString();
+             form = form.Replace("Log" + i + "(" + letter + ")", log);
+         }
+
+         if (form.Contains("Log" + letter + "(" + i + ")"))
+         {
+             string log = Math.Log(i, Convert.ToDouble(name.Text.Trim())).ToString();
+             form = form.Replace("Log" + letter + "(" + i + ")", log);
+         }
+
+
+         if (form.Contains(letter + "^" + i))
          {
              string pow = Math.Pow(Convert.ToDouble(name.Text.Trim()), i).ToString();
-             form=form.Replace("(" + letter + "^" + i + ")", pow);
+             form = form.Replace(letter + "^" + i, pow);
+            
          }
-         if (form.Contains("(" + i + "^" + letter + ")"))
+
+
+         if (form.Contains(i + "^" + letter))
          {
              string pow = Math.Pow(i, Convert.ToDouble(name.Text.Trim())).ToString();
-             form = form.Replace("(" + i + "^" + letter + ")", pow);
+             form = form.Replace(i + "^" + letter, pow);
+           
          }
-         
+
+
      }
-  
  }
+
 
         private void New_Calc(object sender, RoutedEventArgs e)
         {
