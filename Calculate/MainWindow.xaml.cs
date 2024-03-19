@@ -18,6 +18,7 @@ using System.Data.SQLite;
 using System.Text.RegularExpressions;
 using System.IO;
 using Microsoft.SqlServer.Server;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 
 namespace Calculate
@@ -34,60 +35,48 @@ namespace Calculate
         public MainWindow()
         {
             InitializeComponent();
-           
             UpdateData update = new UpdateData();
             Combo.ItemsSource = update.Updates();
-           
-
-
 
         }
-     
-         public void Change(TextBox name, String letter)
-  {
-      string sin = Math.Sin(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-      form = form.Replace("sin(" + letter + ")", sin);
+        public void Change(TextBox name, String letter)
+        {
+            string sin = Math.Sin(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+            form = form.Replace("sin(" + letter + ")", sin);
 
-      string cos = Math.Cos(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-      form = form.Replace("cos(" + letter + ")", cos);
+            string cos = Math.Cos(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+            form = form.Replace("cos(" + letter + ")", cos);
 
-      string tg = Math.Tan(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
-      form = form.Replace("tg(" + letter + ")", tg);
+            string tg = Math.Tan(Math.PI * Convert.ToDouble(name.Text.Trim()) / 180).ToString();
+            form = form.Replace("tg(" + letter + ")", tg);
 
-      for (double i = 0; i < 100; i += 0.1)
-      {
+            for (double i = 0; i < 100; i += 0.1)
+            {
 
-          if (form.Contains(letter + "^" + "(" + i.ToString() + ")"))
-          {
-              string pow = Math.Pow(double.Parse(name.Text.Trim()), i).ToString();
-              form = form.Replace(letter + "^" + "(" + i.ToString() + ")", pow);
+                if (form.Contains(letter + "^" + "(" + i.ToString() + ")"))
+                {
+                    string pow = Math.Pow(double.Parse(name.Text.Trim()), i).ToString();
+                    form = form.Replace(letter + "^" + "(" + i.ToString() + ")", pow);
 
-          }
+                }
+                if (form.Contains(i + "^" + letter))
+                {
+                    string pow = Math.Pow(i, double.Parse(name.Text.Trim())).ToString();
+                    form = form.Replace(i + "^" + letter, pow);
+                }
+                if (form.Contains("Log" + i + "(" + letter + ")"))
+                {
+                    string log = Math.Log(Convert.ToDouble(name.Text.Trim()), i).ToString();
+                    form = form.Replace("Log" + i + "(" + letter + ")", log);
+                }
+                if (form.Contains("Log" + letter + "(" + i + ")"))
+                {
+                    string log = Math.Log(i, Convert.ToDouble(name.Text.Trim())).ToString();
+                    form = form.Replace("Log" + letter + "(" + i + ")", log);
+                }
+            }
 
-
-
-          if (form.Contains(i + "^" + letter))
-          {
-              string pow = Math.Pow(i, double.Parse(name.Text.Trim())).ToString();
-              form = form.Replace(i + "^" + letter, pow);
-          }
-          if (form.Contains("Log" + i + "(" + letter + ")"))
-          {
-              string log = Math.Log(Convert.ToDouble(name.Text.Trim()), i).ToString();
-              form = form.Replace("Log" + i + "(" + letter + ")", log);
-          }
-
-
-          if (form.Contains("Log" + letter + "(" + i + ")"))
-          {
-              string log = Math.Log(i, Convert.ToDouble(name.Text.Trim())).ToString();
-              form = form.Replace("Log" + letter + "(" + i + ")", log);
-          }
-
-
-      }
-
-  }
+        }
 
         private void New_Calc(object sender, RoutedEventArgs e)
         {
@@ -152,20 +141,6 @@ namespace Calculate
                 connection.Close();
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
         private void Calc(object sender, RoutedEventArgs e)
@@ -186,7 +161,6 @@ namespace Calculate
                     Text_A.ToolTip = "Парамаетр A не введен";
                     Text_A.Background = Brushes.Pink;
                 }
-
                 else
                 {
                     Text_A.Background = Brushes.Transparent;
@@ -195,24 +169,21 @@ namespace Calculate
 
                 if (Text_A.Background == Brushes.Transparent)
                 {
-                   
-
-                    
                     Change(Text_A, "A");
-                    form = form.Replace("A", Text_A.Text.Trim().ToString());
-
+                    form = form.Replace("A", Text_A.Text.Trim());
                     form = form.Replace(",", ".");
+                    try
+                    {
+                        string value = new DataTable().Compute(form, "").ToString();
+                        Rez.Text = Math.Round(Double.Parse(value), 2).ToString();
+                    }
+                    catch (EvaluateException)
+                    {
 
-                   
-                     string value = new DataTable().Compute(form, "").ToString();
+                        Rez.Text = "Ошибка расчета";
 
-                     Rez.Text = Math.Round(Double.Parse(value), 2).ToString();
+                    }
                 }
-
-
-
-
-
             }
             if (Form.Text.Contains("A") & Form.Text.Contains("B") & !Form.Text.Contains("C"))
             {
@@ -239,33 +210,28 @@ namespace Calculate
                     Text_B.ToolTip = null;
 
                 }
-
-
-
                 if (Text_A.Background == Brushes.Transparent & Text_B.Background == Brushes.Transparent)
                 {
-
-
-
                     Change(Text_A, "A");
                     Change(Text_B, "B");
-
-                   
-
-
-
-
 
                     form = form.Replace("A", Text_A.Text.Trim().ToString());
 
                     form = form.Replace("B", Text_B.Text.Trim().ToString());
 
                     form = form.Replace(",", ".");
-                   
-                   string value_2 = new DataTable().Compute(form, "").ToString();
 
+                    try
+                    {
+                        string value = new DataTable().Compute(form, "").ToString();
+                        Rez.Text = Math.Round(Double.Parse(value), 2).ToString();
+                    }
+                    catch (EvaluateException)
+                    {
 
-                    Rez.Text = Math.Round(Convert.ToDouble(value_2), 2).ToString();
+                        Rez.Text = "Ошибка расчета";
+
+                    }
                 }
 
             }
@@ -333,40 +299,31 @@ namespace Calculate
                         Text_C.Text += "0";
                     }
 
-
-
                     Change(Text_A, "A");
                     Change(Text_B, "B");
                     Change(Text_C, "C");
-
-
-
                     form = form.Replace("A", Text_A.Text.Trim().ToString());
 
                     form = form.Replace("B", Text_B.Text.Trim().ToString());
 
                     form = form.Replace("C", Text_C.Text.Trim().ToString());
-
-
-
                     form = form.Replace(",", ".");
 
-                    string value_3 = new DataTable().Compute(form, "").ToString();
+                    try
+                    {
+                        string value = new DataTable().Compute(form, "").ToString();
+                        Rez.Text = Math.Round(Double.Parse(value), 2).ToString();
+                    }
+                    catch (EvaluateException)
+                    {
 
-                    Rez.Text = Math.Round(Convert.ToDouble(value_3), 2).ToString();
+                        Rez.Text = "Ошибка расчета";
+
+                    }
 
                 }
 
             }
-
-
-
-
-
-
-
-
-    
 
         }
 
@@ -393,20 +350,16 @@ namespace Calculate
             double val;
             if (textBox.Text == "" && e.Text == "-")
             {
-                e.Handled = false; 
+                e.Handled = false;
             }
             else if (e.Text == "-")
             {
-                e.Handled = true; 
+                e.Handled = true;
             }
             else
             {
-              e.Handled = !double.TryParse(fullText, out val); 
+                e.Handled = !double.TryParse(fullText, out val);
             }
         }
-
-
-
-
     }
 }
